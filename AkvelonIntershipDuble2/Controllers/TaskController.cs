@@ -106,11 +106,85 @@ namespace AkvelonIntershipDuble2.Controllers
 
         [HttpGet]
         [Route("Get")]
-        public ActionResult<List<ProjectTask>> ViewTasks()
+        public ActionResult<List<ProjectTaskResponse>> ViewTasks()
         {
-            var allTasks = _context.Tasks.ToList();
+            var allTasks = _context.Tasks.Select(task => new ProjectTaskResponse
+            {
+                Priority = task.Priority,
+                ProjectId = task.Project.ProjectId,
+                ProjectTaskStatus = task.ProjectTaskStatus.ToString(),
+                TaskDescription = task.TaskDescription,
+                TaskName = task.TaskName,
+                TaskId = task.TaskId
+            }).ToList();
             return Ok(allTasks);
         }
+        
+        [HttpGet]
+        [Route("SortByParametr{byWhat}")]
+        public ActionResult<List<ProjectTaskResponse>> SortByParametr([FromRoute] string byWhat)
+        {
+            var projects = _context.Projects;
+            if (projects == null)
+            {
+                return NotFound("No objects in db on table Project tasks");
+            }
 
+            if(byWhat == "Name")
+            {
+                var allTasks = _context.Tasks.Select(task => new ProjectTaskResponse
+                {
+                    Priority = task.Priority,
+                    ProjectId = task.Project.ProjectId,
+                    ProjectTaskStatus = task.ProjectTaskStatus.ToString(),
+                    TaskDescription = task.TaskDescription,
+                    TaskName = task.TaskName,
+                    TaskId = task.TaskId
+                }).OrderBy(response => response.TaskName);
+                return Ok(allTasks);
+            }
+            if (byWhat == "Prority")
+            {
+                var allTasks = _context.Tasks.Select(task => new ProjectTaskResponse
+                {
+                    Priority = task.Priority,
+                    ProjectId = task.Project.ProjectId,
+                    ProjectTaskStatus = task.ProjectTaskStatus.ToString(),
+                    TaskDescription = task.TaskDescription,
+                    TaskName = task.TaskName,
+                    TaskId = task.TaskId
+                }).OrderBy(response => response.Priority);
+                return Ok(allTasks);
+            }
+            if (byWhat == "Description")
+            {
+                var allTasks = _context.Tasks.Select(task => new ProjectTaskResponse
+                {
+                    Priority = task.Priority,
+                    ProjectId = task.Project.ProjectId,
+                    ProjectTaskStatus = task.ProjectTaskStatus.ToString(),
+                    TaskDescription = task.TaskDescription,
+                    TaskName = task.TaskName,
+                    TaskId = task.TaskId
+                }).OrderBy(response => response.TaskDescription);
+                return Ok(allTasks);
+            }
+            
+            if (byWhat == "Status")
+            {
+                var allTasks = _context.Tasks.Select(task => new ProjectTaskResponse
+                {
+                    Priority = task.Priority,
+                    ProjectId = task.Project.ProjectId,
+                    ProjectTaskStatus = task.ProjectTaskStatus.ToString(),
+                    TaskDescription = task.TaskDescription,
+                    TaskName = task.TaskName,
+                    TaskId = task.TaskId
+                }).OrderBy(response => response.ProjectTaskStatus);
+                return Ok(allTasks);
+            }
+
+            return NotFound("This Key Word Not Found");
+        }
     }
 }

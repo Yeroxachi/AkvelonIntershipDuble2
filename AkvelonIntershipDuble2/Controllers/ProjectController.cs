@@ -132,7 +132,70 @@ namespace AkvelonIntershipDuble2.Controllers
                 TaskName = task.TaskName
             }).ToList();
         }
-        
-        
+
+        [HttpGet]
+        [Route("SortByParametr{byWhat}")]
+        public ActionResult<List<ProjectResponse>> SortByParametr([FromRoute] string byWhat)
+        {
+            var projects = _context.Projects;
+            if (projects == null)
+            {
+                return NotFound("No objects on Db check it pls");
+            }
+            if (byWhat == "Name")
+            {
+                 var allProjects = _context.Projects.Select(project => new ProjectResponse
+                {
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Priority = project.Priority,
+                    ProjectStatus = project.ProjectStatus.ToString()
+                }).OrderBy(response => response.ProjectName).ToList();
+                 return Ok(allProjects);
+            }
+            if (byWhat == "StartDate")
+            {
+                var allProjects = _context.Projects.Select(project => new ProjectResponse
+                {
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Priority = project.Priority,
+                    ProjectStatus = project.ProjectStatus.ToString()
+                }).OrderBy(response => response.StartDate).ToList();
+                return Ok(allProjects);
+            }
+            if (byWhat == "EndDate")
+            {
+                var allProjects = _context.Projects.Select(project => new ProjectResponse
+                {
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Priority = project.Priority,
+                    ProjectStatus = project.ProjectStatus.ToString()
+                }).OrderBy(response => response.EndDate).ToList();
+                return Ok(allProjects);
+            }
+            if (byWhat == "Priority")
+            {
+                var allProjects = _context.Projects.Select(project => new ProjectResponse
+                {
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate,
+                    Priority = project.Priority,
+                    ProjectStatus = project.ProjectStatus.ToString()
+                }).OrderBy(response => response.Priority).ToList();
+                return Ok(allProjects);
+            }
+
+            return NotFound("This Key Word Not Found");
+        }
     }
 }
